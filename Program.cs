@@ -28,7 +28,7 @@ namespace TextAnalyzer
                     string readline;
                     while ((readline = sr.ReadLine()) != null)
                     {
-                        var line = new Line(readline.Split(' ', '.', ',', '?', '!'));
+                        var line = new Line(readline.Split(new[]{' ', '.', ',', '?', '!'}, StringSplitOptions.RemoveEmptyEntries));
                         lines.Add(line);
                         
                     }
