@@ -8,9 +8,9 @@ namespace Core
     {
         public int Id { get; set; }
         private static int _startId = 1;
-        public IEnumerable<string>[] Words { get; set; }
+        public string[] Words { get; set; }
 
-        public Line(params IEnumerable<string>[] words)
+        public Line(params string[] words)
         {
             Id = _startId;
             _startId++;

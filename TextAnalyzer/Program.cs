@@ -1,11 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using Core;
 
+/*It is necessary to create an application that accepts the path to a text file as input and performs
+    splitting the text into words. All found words are formed into a dictionary that contains all occurrences of the word
+    in the text and the positions of these occurrences. After processing the text, the program should display statistics
+    on the words found and the frequency of their repetitions in the text, the list should be sorted in descending order. 
+    After displaying general statistics, the program waits for the user to enter a word and returns
+    information about all occurrences of the word in the text (line number and position)*/
 namespace TextAnalyzer
 {
     class Program
@@ -16,26 +18,33 @@ namespace TextAnalyzer
             var filename = Console.ReadLine();*/
             var path = "legend.txt";
             
-
             try
             {
                 var lines = FileProcessor.ReadLinesFromFile(path);
-                //if (!File.Exists(filename))
-                //    throw new Exception("The file does not exist");
-                //if (!new Regex(@"\w\.txt").IsMatch(filename))
-                //    throw new Exception("The file is not in txt format");
+                var counter = new WordsCounter(lines);
+                Console.WriteLine($"Lines quantity: {lines.Count()}\n");
 
-                //using (var sr = new StreamReader(filename))
-                //{
-                //    string readline;
-                //    while ((readline = sr.ReadLine()) != null)
-                //    {
-                //        var line = new Line(readline.Split(new[]{' ', '.', ',', '?', '!'}, StringSplitOptions.RemoveEmptyEntries));
-                //        lines.Add(line);
-                        
-                //    }
-                //}
-                Console.WriteLine(lines.Count());
+                var words = counter.CountFrequency()
+                    .OrderByDescending(x => x.Value);
+
+                Console.WriteLine("Words and frequencies:");
+                foreach (var (key, value) in words)
+                {
+                    Console.WriteLine($"- {key}\t{value}");
+                }
+
+                var word = "he";
+                var positions = counter.FindPositionOfWord(word);
+
+                if (!positions.Any())
+                    throw new Exception($"No matches of the \"{word}\" were found");
+
+                Console.WriteLine($"The \"{word}\" was found {positions.Count} times:");
+                foreach (var (line, position) in positions)
+                {
+                    Console.WriteLine($"- Line {line}, position {position}");
+                }
+
             }
             catch (Exception e)
             {
