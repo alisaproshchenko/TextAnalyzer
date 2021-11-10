@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TextAnalyzer
+namespace Core
 {
-    class Line
+    public class Line
     {
         public int Id { get; set; }
         private static int _startId = 1;

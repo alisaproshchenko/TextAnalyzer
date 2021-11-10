@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TextAnalyzer
+namespace Core
 {
     class Word
     {
