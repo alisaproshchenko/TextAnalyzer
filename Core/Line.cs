@@ -9,11 +9,13 @@ namespace Core
         public int Id { get; set; }
         private static int _startId = 1;
         public string[] Words { get; set; }
+        public string FullLine { get; set; }
 
-        public Line(params string[] words)
+        public Line(string line, params string[] words)
         {
             Id = _startId;
             _startId++;
+            FullLine = line;
             Words = words;
         }
         

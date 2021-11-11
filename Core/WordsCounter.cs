@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Core
 {
@@ -13,7 +14,7 @@ namespace Core
         {
             Lines = lines;
         }
-        public IDictionary<string, int> CountFrequency()
+        public IOrderedEnumerable<KeyValuePair<string, int>> CountFrequency() //frequency of words repetitions
         {
             var result = new Dictionary<string, int>();
             foreach (var line in Lines)
@@ -23,28 +24,29 @@ namespace Core
                     if (result.ContainsKey(word.ToLower()))
                         result[word.ToLower()] += 1;
                     else
-                    {
                         result[word.ToLower()] = 1;
-                    }
                 }
             }
 
-            return result;
+            return result.OrderByDescending(x => x.Value);
         }
 
-        public IDictionary<int, int> FindPositionOfWord(string word)
+        public IList<(int, int)> FindPositionOfWord(string word) //all occurrences of the word
         {
-            var result = new Dictionary<int, int>();
-            var lowerWord = word.ToLower();
-            foreach (var line in Lines)
-            {
-                for (var j = 0; j < line.Words.Count(); j++)
-                {
-                    if(line.Words[j] == lowerWord)
-                        result.Add(line.Id, j + 1);
-                }
-            }
-            return result;
+            var regex = new Regex(PatternBuilder(word));
+            return (from line in Lines 
+                let matches = regex.Matches(line.FullLine) 
+                where matches.Any() 
+                from Match match in matches 
+                select (line.Id, match.Index + 1)).ToList();
+        }
+
+        private string PatternBuilder(string word)
+        {
+            var sb = new StringBuilder(word);
+            sb.Remove(0, 1);
+            sb.Insert(0, $"[{word.ToLower()[0]}{word.ToUpper()[0]}]");
+            return "\\b" + sb + "\\b";
         }
     }
 }
